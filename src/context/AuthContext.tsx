@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { bootstrapAdmin } from '@/lib/authBootstrap'
+import { seedFirestore } from '@/lib/seedFirestore'
 import { findUserByEmail, userService } from '@/services/userService'
 import type { AppUser } from '@/types'
 
@@ -38,9 +39,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // runs independently in the background.
   const initializing = !authReady
 
-  // Bootstrap the Super Admin account silently in the background.
+  // Bootstrap the Super Admin account and seed initial data silently in the background.
   useEffect(() => {
-    bootstrapAdmin().catch(err => console.error('[AuthProvider] bootstrap failed:', err))
+    Promise.all([
+      bootstrapAdmin(),
+      seedFirestore(),
+    ]).catch(err => console.error('[AuthProvider] bootstrap failed:', err))
   }, [])
 
   // Restore the session on refresh from the persisted uid.

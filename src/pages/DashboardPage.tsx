@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const buildings  = properties.filter(p => p.propertyType === 'Building').length
   const villas     = properties.filter(p => p.propertyType === 'Villa').length
   const offices    = properties.filter(p => p.propertyType === 'Office').length
+  const stores     = properties.filter(p => p.propertyType === 'Store').length
 
   const recentTenants = [...tenants]
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
@@ -23,7 +24,7 @@ export default function DashboardPage() {
     {
       title: t('dashboard.totalProperties'),
       value: properties.length,
-      sub: t('dashboard.propertyTypeBreakdown', { apartments, buildings, villas, offices }),
+      sub: t('dashboard.propertyTypeBreakdown', { apartments, buildings, villas, offices, stores }),
       icon: Building2,
       color: 'text-amber-600',
       bg: 'bg-amber-50 dark:bg-amber-950',
@@ -57,6 +58,7 @@ export default function DashboardPage() {
         { label: t('properties.types.Building'),  count: buildings,  color: 'bg-purple-500' },
         { label: t('properties.types.Villa'),      count: villas,     color: 'bg-green-500' },
         { label: t('properties.types.Office'),     count: offices,    color: 'bg-orange-500' },
+        { label: t('properties.types.Store'),      count: stores,     color: 'bg-yellow-500' },
       ],
     },
   ]

@@ -1,4 +1,4 @@
-export type PropertyType = 'Apartment' | 'Building' | 'Villa' | 'Office'
+export type PropertyType = 'Apartment' | 'Building' | 'Villa' | 'Office' | 'Store'
 export type RoomType = 'Bachelor' | 'Family'
 
 export interface Property {
@@ -39,6 +39,18 @@ export interface Rental {
   rentalTermMonths: number
   billingCycle: BillingCycle
   rentAmount: number
+  createdAt: string
+}
+
+export type RentalTermStatus = 'Pending' | 'Paid' | 'Overdue'
+
+export interface RentalTerm {
+  id: string
+  rentalId: string
+  termLabel: string
+  dueDate: string
+  amount: number
+  status: RentalTermStatus
   createdAt: string
 }
 

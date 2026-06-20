@@ -14,6 +14,7 @@ import TenantsPage from '@/pages/TenantsPage'
 import TenantDetailPage from '@/pages/TenantDetailPage'
 import RentalsPage from '@/pages/RentalsPage'
 import RentalDetailPage from '@/pages/RentalDetailPage'
+import OverdueRentalsPage from '@/pages/OverdueRentalsPage'
 import ReportsPage from '@/pages/ReportsPage'
 
 function AppWithDirection() {
@@ -50,6 +51,7 @@ function AppWithDirection() {
                 <Route path="/tenants/:id" element={<TenantDetailPage />} />
                 <Route path="/rentals" element={<RentalsPage />} />
                 <Route path="/rentals/:id" element={<RentalDetailPage />} />
+                <Route path="/overdue-rentals" element={<OverdueRentalsPage />} />
                 <Route path="/reports" element={<ReportsPage />} />
               </Route>
             </Route>

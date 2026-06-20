@@ -22,6 +22,7 @@ export default function AppLayout() {
     { to: '/properties', label: t('nav.properties'), icon: Building2, end: false },
     { to: '/tenants', label: t('nav.tenants'), icon: Users, end: false },
     { to: '/rentals', label: t('nav.rentals'), icon: FileText, end: false },
+    { to: '/overdue-rentals', label: t('nav.overdueRentals'), icon: AlertCircle, end: false },
     { to: '/reports', label: t('nav.reports'), icon: BarChart3, end: false },
   ]
 

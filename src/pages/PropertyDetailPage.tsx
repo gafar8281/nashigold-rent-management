@@ -18,9 +18,10 @@ const TYPE_COLORS: Record<string, string> = {
   Building:  'bg-purple-100 text-purple-700',
   Villa:     'bg-green-100 text-green-700',
   Office:    'bg-orange-100 text-orange-700',
+  Store:     'bg-yellow-100 text-yellow-700',
 }
 
-const PROPERTY_TYPES: PropertyType[] = ['Apartment', 'Building', 'Villa', 'Office']
+const PROPERTY_TYPES: PropertyType[] = ['Apartment', 'Building', 'Villa', 'Office', 'Store']
 
 export default function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>()

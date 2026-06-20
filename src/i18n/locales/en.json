@@ -25,6 +25,7 @@
     "tenants": "Tenants",
     "rentals": "Rentals",
     "reports": "Reports",
+    "overdueRentals": "Overdue Rentals",
     "signOut": "Sign Out"
   },
   "auth": {
@@ -52,7 +53,7 @@
     "totalRooms": "Total Rooms",
     "totalTenants": "Total Tenants",
     "propertyTypes": "Property Types",
-    "propertyTypeBreakdown": "{{apartments}} Apt · {{buildings}} Bldg · {{villas}} Villa · {{offices}} Office",
+    "propertyTypeBreakdown": "{{apartments}} Apt · {{buildings}} Bldg · {{villas}} Villa · {{offices}} Office · {{stores}} Store",
     "acrossProperties": "Across {{count}} properties",
     "registeredTenants": "Registered in the system",
     "recentTenants": "Recent Tenants",
@@ -83,7 +84,10 @@
     "endDate": "End Date",
     "duration": "Duration",
     "billingCycle": "Billing Cycle",
-    "rentAmount": "Rent Amount"
+    "rentAmount": "Rent Amount",
+    "dueDate": "Due Date",
+    "term": "Term",
+    "daysOverdue": "Days Overdue"
   },
   "properties": {
     "title": "Properties",
@@ -111,7 +115,8 @@
       "Apartment": "Apartment",
       "Building": "Building",
       "Villa": "Villa",
-      "Office": "Office"
+      "Office": "Office",
+      "Store": "Store"
     }
   },
   "rooms": {
@@ -189,7 +194,20 @@
       "Monthly": "Monthly",
       "Quarterly": "Quarterly",
       "Yearly": "Yearly"
+    },
+    "rentalTerms": "Rental Terms",
+    "noTerms": "No terms generated.",
+    "termLabel": "Term",
+    "termStatus": {
+      "Pending": "Pending",
+      "Paid": "Paid",
+      "Overdue": "Overdue"
     }
+  },
+  "overdueRentals": {
+    "title": "Overdue Rentals",
+    "subtitle": "{{count}} overdue term(s)",
+    "noFound": "No overdue rental terms found"
   },
   "reports": {
     "title": "Reports",

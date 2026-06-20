@@ -1,4 +1,4 @@
-import type { Property, Room, Tenant, Rental } from '@/types'
+import type { Property, Room, Tenant, Rental, RentalTerm } from '@/types'
 
 export function nextPropertyId(properties: Property[]): string {
   if (properties.length === 0) return 'PROP-0001'
@@ -25,4 +25,11 @@ export function nextRentalId(rentals: Rental[]): string {
   if (rentals.length === 0) return 'RENT-0001'
   const nums = rentals.map(r => parseInt(r.id.replace('RENT-', ''), 10))
   return 'RENT-' + String(Math.max(...nums) + 1).padStart(4, '0')
+}
+
+export function nextRentalTermIds(terms: RentalTerm[], count: number): string[] {
+  const base = terms.length === 0
+    ? 1
+    : Math.max(...terms.map(t => parseInt(t.id.replace('TERM-', ''), 10))) + 1
+  return Array.from({ length: count }, (_, i) => 'TERM-' + String(base + i).padStart(4, '0'))
 }

@@ -12,7 +12,7 @@ interface Props {
   onOpenChange: (open: boolean) => void
 }
 
-const PROPERTY_TYPES: PropertyType[] = ['Apartment', 'Building', 'Villa', 'Office']
+const PROPERTY_TYPES: PropertyType[] = ['Apartment', 'Building', 'Villa', 'Office', 'Store']
 
 export default function AddPropertyDialog({ open, onOpenChange }: Props) {
   const { t } = useTranslation()

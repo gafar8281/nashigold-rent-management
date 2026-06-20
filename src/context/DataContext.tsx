@@ -1,12 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
-import type { Property, Room, Tenant, Rental } from '@/types'
-import { nextPropertyId, nextRoomId, nextTenantId, nextRentalId } from '@/lib/idGen'
+import type { Property, Room, Tenant, Rental, RentalTerm } from '@/types'
+import type { GeneratedTerm } from '@/lib/calculations'
+import { nextPropertyId, nextRoomId, nextTenantId, nextRentalId, nextRentalTermIds } from '@/lib/idGen'
 import { todayISO } from '@/lib/formatters'
 import { propertyService } from '@/services/propertyService'
 import { roomService } from '@/services/roomService'
 import { tenantService } from '@/services/tenantService'
 import { rentalService } from '@/services/rentalService'
+import { rentalTermService } from '@/services/rentalTermService'
 
 interface DataContextValue {
   properties: Property[]
@@ -35,6 +37,10 @@ interface DataContextValue {
   getRentalsByTenantId: (tenantId: string) => Rental[]
   getRentalsByPropertyId: (propertyId: string) => Rental[]
 
+  rentalTerms: RentalTerm[]
+  addRentalTermsBatch: (rentalId: string, terms: GeneratedTerm[]) => Promise<void>
+  getRentalTermsByRentalId: (rentalId: string) => RentalTerm[]
+
   getRentalById: (id: string) => Rental | undefined
   getPropertyById: (id: string) => Property | undefined
   getTenantById: (id: string) => Tenant | undefined
@@ -47,6 +53,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [rooms, setRooms] = useState<Room[]>([])
   const [tenants, setTenants] = useState<Tenant[]>([])
   const [rentals, setRentals] = useState<Rental[]>([])
+  const [rentalTerms, setRentalTerms] = useState<RentalTerm[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -54,6 +61,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const roomsRef = useRef(rooms)
   const tenantsRef = useRef(tenants)
   const rentalsRef = useRef(rentals)
+  const rentalTermsRef = useRef(rentalTerms)
 
   useEffect(() => {
     let cancelled = false
@@ -61,9 +69,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     let roomsLoaded = false
     let tenantsLoaded = false
     let rentalsLoaded = false
+    let rentalTermsLoaded = false
 
     function markLoaded() {
-      if (propertiesLoaded && roomsLoaded && tenantsLoaded && rentalsLoaded && !cancelled) setLoading(false)
+      if (propertiesLoaded && roomsLoaded && tenantsLoaded && rentalsLoaded && rentalTermsLoaded && !cancelled) setLoading(false)
     }
 
     function handleError(err: Error) {
@@ -104,12 +113,21 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       markLoaded()
     }, handleError)
 
+    const unsubRentalTerms = rentalTermService.subscribe(items => {
+      if (cancelled) return
+      rentalTermsRef.current = items
+      setRentalTerms(items)
+      rentalTermsLoaded = true
+      markLoaded()
+    }, handleError)
+
     return () => {
       cancelled = true
       unsubProperties()
       unsubRooms()
       unsubTenants()
       unsubRentals()
+      unsubRentalTerms()
     }
   }, [])
 
@@ -191,6 +209,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function deleteRental(id: string): Promise<void> {
+    const relatedTerms = rentalTermsRef.current.filter(t => t.rentalId === id)
+    for (const term of relatedTerms) {
+      await rentalTermService.delete(term.id)
+    }
     await rentalService.delete(id)
   }
 
@@ -200,6 +222,19 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   function getRentalsByPropertyId(propertyId: string): Rental[] {
     return rentals.filter(r => r.propertyId === propertyId)
+  }
+
+  async function addRentalTermsBatch(rentalId: string, terms: GeneratedTerm[]): Promise<void> {
+    const ids = nextRentalTermIds(rentalTermsRef.current, terms.length)
+    const createdAt = todayISO()
+    for (let i = 0; i < terms.length; i++) {
+      const newTerm: RentalTerm = { ...terms[i], id: ids[i], rentalId, createdAt }
+      await rentalTermService.setDoc(newTerm.id, newTerm)
+    }
+  }
+
+  function getRentalTermsByRentalId(rentalId: string): RentalTerm[] {
+    return rentalTerms.filter(t => t.rentalId === rentalId)
   }
 
   function getRentalById(id: string): Rental | undefined {
@@ -220,6 +255,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       rooms,
       tenants,
       rentals,
+      rentalTerms,
       loading,
       error,
       addProperty,
@@ -237,6 +273,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       deleteRental,
       getRentalsByTenantId,
       getRentalsByPropertyId,
+      addRentalTermsBatch,
+      getRentalTermsByRentalId,
       getRentalById,
       getPropertyById,
       getTenantById,

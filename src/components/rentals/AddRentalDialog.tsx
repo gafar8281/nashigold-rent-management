@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useData } from '@/context/DataContext'
-import { calcRentalTermMonths, splitRentalTerm } from '@/lib/calculations'
+import { calcRentalTermMonths, splitRentalTerm, generateRentalTerms } from '@/lib/calculations'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,7 +18,7 @@ interface Props {
 
 export default function AddRentalDialog({ open, onClose }: Props) {
   const { t } = useTranslation()
-  const { tenants, properties, getRoomsByPropertyId, addRental } = useData()
+  const { tenants, properties, getRoomsByPropertyId, addRental, addRentalTermsBatch } = useData()
 
   const [tenantId, setTenantId] = useState('')
   const [propertyId, setPropertyId] = useState('')
@@ -83,18 +83,21 @@ export default function AddRentalDialog({ open, onClose }: Props) {
       return
     }
 
+    const parsedAmount = parseFloat(rentAmount)
     setSaving(true)
     try {
-      await addRental({
+      const newRental = await addRental({
         tenantId,
         propertyId,
-        roomId: needsRoom ? roomId : undefined,
+        ...(needsRoom && roomId ? { roomId } : {}),
         startDate,
         endDate,
         rentalTermMonths: calcRentalTermMonths(startDate, endDate),
         billingCycle,
-        rentAmount: parseFloat(rentAmount),
+        rentAmount: parsedAmount,
       })
+      const terms = generateRentalTerms(startDate, endDate, billingCycle, parsedAmount)
+      await addRentalTermsBatch(newRental.id, terms)
       reset()
       onClose()
     } catch {

@@ -25,6 +25,7 @@
     "tenants": "المستأجرون",
     "rentals": "الإيجارات",
     "reports": "التقارير",
+    "overdueRentals": "الإيجارات المتأخرة",
     "signOut": "تسجيل الخروج"
   },
   "auth": {
@@ -52,7 +53,7 @@
     "totalRooms": "إجمالي الغرف",
     "totalTenants": "إجمالي المستأجرين",
     "propertyTypes": "أنواع العقارات",
-    "propertyTypeBreakdown": "{{apartments}} شقق · {{buildings}} مباني · {{villas}} فلل · {{offices}} مكاتب",
+    "propertyTypeBreakdown": "{{apartments}} شقق · {{buildings}} مباني · {{villas}} فلل · {{offices}} مكاتب · {{stores}} متجر",
     "acrossProperties": "عبر {{count}} عقار",
     "registeredTenants": "مسجّلون في النظام",
     "recentTenants": "المستأجرون الأخيرون",
@@ -83,7 +84,10 @@
     "endDate": "تاريخ النهاية",
     "duration": "المدة",
     "billingCycle": "دورة الفوترة",
-    "rentAmount": "مبلغ الإيجار"
+    "rentAmount": "مبلغ الإيجار",
+    "dueDate": "تاريخ الاستحقاق",
+    "term": "الفترة",
+    "daysOverdue": "أيام التأخر"
   },
   "properties": {
     "title": "العقارات",
@@ -111,7 +115,8 @@
       "Apartment": "شقة",
       "Building": "مبنى",
       "Villa": "فيلا",
-      "Office": "مكتب"
+      "Office": "مكتب",
+      "Store": "متجر"
     }
   },
   "rooms": {
@@ -189,7 +194,20 @@
       "Monthly": "شهري",
       "Quarterly": "ربع سنوي",
       "Yearly": "سنوي"
+    },
+    "rentalTerms": "شروط الإيجار",
+    "noTerms": "لا توجد شروط مُولَّدة.",
+    "termLabel": "الفترة",
+    "termStatus": {
+      "Pending": "معلّق",
+      "Paid": "مدفوع",
+      "Overdue": "متأخر"
     }
+  },
+  "overdueRentals": {
+    "title": "الإيجارات المتأخرة",
+    "subtitle": "{{count}} بند(بنود) متأخر",
+    "noFound": "لا توجد بنود إيجار متأخرة"
   },
   "reports": {
     "title": "التقارير",

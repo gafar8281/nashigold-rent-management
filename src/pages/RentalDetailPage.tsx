@@ -11,7 +11,58 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import type { BillingCycle } from '@/types'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import type { BillingCycle, RentalTermStatus } from '@/types'
+
+const TERM_STATUS_CLASS: Record<RentalTermStatus, string> = {
+  Pending: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100',
+  Paid:    'bg-green-100 text-green-700 hover:bg-green-100',
+  Overdue: 'bg-red-100 text-red-700 hover:bg-red-100',
+}
+
+function RentalTermsCard({ rentalId }: { rentalId: string }) {
+  const { t } = useTranslation()
+  const { getRentalTermsByRentalId } = useData()
+  const terms = getRentalTermsByRentalId(rentalId).slice().sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('rentals.rentalTerms')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {terms.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t('rentals.noTerms')}</p>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('rentals.termLabel')}</TableHead>
+                <TableHead>{t('table.dueDate')}</TableHead>
+                <TableHead>{t('table.rentAmount')}</TableHead>
+                <TableHead>{t('table.status')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {terms.map(term => (
+                <TableRow key={term.id}>
+                  <TableCell className="font-medium">{term.termLabel}</TableCell>
+                  <TableCell>{formatDate(term.dueDate)}</TableCell>
+                  <TableCell>{formatCurrency(term.amount)}</TableCell>
+                  <TableCell>
+                    <Badge className={TERM_STATUS_CLASS[term.status]}>
+                      {t(`rentals.termStatus.${term.status}`)}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
 
 const ROOM_PROPERTY_TYPES = ['Apartment', 'Building']
 const BILLING_CYCLES: BillingCycle[] = ['Monthly', 'Quarterly', 'Yearly']
@@ -236,6 +287,9 @@ export default function RentalDetailPage() {
           </dl>
         </CardContent>
       </Card>
+
+      {/* Rental Terms */}
+      <RentalTermsCard rentalId={rental.id} />
 
       {/* Edit Dialog */}
       <Dialog open={showEdit} onOpenChange={v => { if (!v) setShowEdit(false) }}>
