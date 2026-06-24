@@ -59,7 +59,11 @@ export default function AddTenantDialog({ open, onOpenChange }: Props) {
       reset()
       onOpenChange(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
+      const msg = err instanceof Error ? err.message : String(err)
+      if (msg === 'DUPLICATE_BOTH') setError(t('tenants.errorDuplicateBoth'))
+      else if (msg === 'DUPLICATE_PHONE') setError(t('tenants.errorDuplicatePhone'))
+      else if (msg === 'DUPLICATE_NATIONAL_ID') setError(t('tenants.errorDuplicateNationalId'))
+      else setError(msg)
     } finally {
       setSaving(false)
     }

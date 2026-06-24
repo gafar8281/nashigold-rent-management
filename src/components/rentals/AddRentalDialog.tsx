@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import type { BillingCycle } from '@/types'
 
 const ROOM_PROPERTY_TYPES = ['Apartment', 'Building']
-const BILLING_CYCLES: BillingCycle[] = ['Monthly', 'Quarterly', 'Yearly']
+const BILLING_CYCLES: BillingCycle[] = ['Monthly', 'Quarterly', 'Half Yearly', 'Yearly']
 
 interface Props {
   open: boolean

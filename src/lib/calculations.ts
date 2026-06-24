@@ -14,7 +14,7 @@ export function generateRentalTerms(
   rentAmount: number,
 ): GeneratedTerm[] {
   const [startY, startM] = startDate.split('-').map(Number)
-  const increment = billingCycle === 'Monthly' ? 1 : billingCycle === 'Quarterly' ? 3 : 12
+  const increment = billingCycle === 'Monthly' ? 1 : billingCycle === 'Quarterly' ? 3 : billingCycle === 'Half Yearly' ? 6 : 12
   const terms: GeneratedTerm[] = []
   let y = startY
   let m = startM // 1-indexed
@@ -36,6 +36,8 @@ export function generateRentalTerms(
       termLabel = lastDayDate.toLocaleString('en-US', { month: 'short' }) + ' ' + periodEndY
     } else if (billingCycle === 'Quarterly') {
       termLabel = `Q${Math.ceil(m / 3)} ${y}`
+    } else if (billingCycle === 'Half Yearly') {
+      termLabel = `H${Math.ceil(m / 6)} ${y}`
     } else {
       termLabel = String(y)
     }

@@ -111,6 +111,7 @@
     "address": "العنوان",
     "addressPlaceholder": "مثال: 12 طريق الملك فهد، الرياض",
     "errorRequired": "اسم العقار والعنوان مطلوبان.",
+    "errorDuplicate": "يوجد عقار بنفس الاسم والنوع والعنوان بالفعل.",
     "types": {
       "Apartment": "شقة",
       "Building": "مبنى",
@@ -155,7 +156,10 @@
     "nationalId": "رقم الهوية الوطنية",
     "address": "العنوان",
     "employmentInfo": "معلومات الوظيفة",
-    "errorRequired": "الاسم الكامل ورقم الهاتف والهوية الوطنية والعنوان مطلوبة."
+    "errorRequired": "الاسم الكامل ورقم الهاتف والهوية الوطنية والعنوان مطلوبة.",
+    "errorDuplicatePhone": "يوجد مستأجر بنفس رقم الهاتف بالفعل.",
+    "errorDuplicateNationalId": "يوجد مستأجر بنفس رقم الهوية الوطنية بالفعل.",
+    "errorDuplicateBoth": "يوجد مستأجر بنفس رقم الهاتف ورقم الهوية الوطنية بالفعل."
   },
   "rentals": {
     "title": "الإيجارات",
@@ -193,6 +197,7 @@
     "billingCycles": {
       "Monthly": "شهري",
       "Quarterly": "ربع سنوي",
+      "Half Yearly": "نصف سنوي",
       "Yearly": "سنوي"
     },
     "rentalTerms": "شروط الإيجار",
@@ -207,7 +212,18 @@
   "overdueRentals": {
     "title": "الإيجارات المتأخرة",
     "subtitle": "{{count}} بند(بنود) متأخر",
-    "noFound": "لا توجد بنود إيجار متأخرة"
+    "noFound": "لا توجد بنود إيجار متأخرة",
+    "actions": "الإجراءات",
+    "markAsPaid": "تحديد كمدفوع",
+    "confirmTitle": "تحديد الإيجار كمدفوع",
+    "confirmMessage": "هل أنت متأكد أنك تريد تحديد هذا الدفع كمدفوع؟",
+    "confirmBtn": "تأكيد",
+    "successMsg": "تم تحديث حالة الدفع إلى مدفوع.",
+    "sendWhatsapp": "إرسال تذكير واتساب",
+    "whatsappTitle": "إرسال تذكير واتساب",
+    "whatsappPhone": "رقم هاتف المستأجر",
+    "whatsappMessageLabel": "الرسالة",
+    "whatsappSend": "إرسال عبر واتساب"
   },
   "reports": {
     "title": "التقارير",

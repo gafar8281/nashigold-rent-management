@@ -39,6 +39,7 @@ interface DataContextValue {
 
   rentalTerms: RentalTerm[]
   addRentalTermsBatch: (rentalId: string, terms: GeneratedTerm[]) => Promise<void>
+  updateRentalTerm: (id: string, data: Partial<RentalTerm>) => Promise<void>
   getRentalTermsByRentalId: (rentalId: string) => RentalTerm[]
 
   getRentalById: (id: string) => Rental | undefined
@@ -132,6 +133,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   async function addProperty(data: Omit<Property, 'id' | 'createdAt'>): Promise<Property> {
+    const duplicate = propertiesRef.current.find(
+      p =>
+        p.propertyName === data.propertyName &&
+        p.propertyType === data.propertyType &&
+        p.address === data.address
+    )
+    if (duplicate) throw new Error('DUPLICATE_PROPERTY')
     const newProperty: Property = {
       ...data,
       id: nextPropertyId(propertiesRef.current),
@@ -177,6 +185,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function addTenant(data: Omit<Tenant, 'id' | 'createdAt'>): Promise<Tenant> {
+    const phoneMatch = tenantsRef.current.some(t => t.phoneNumber === data.phoneNumber)
+    const idMatch    = tenantsRef.current.some(t => t.nationalId  === data.nationalId)
+    if (phoneMatch && idMatch) throw new Error('DUPLICATE_BOTH')
+    if (phoneMatch)            throw new Error('DUPLICATE_PHONE')
+    if (idMatch)               throw new Error('DUPLICATE_NATIONAL_ID')
     const newTenant: Tenant = {
       ...data,
       id: nextTenantId(tenantsRef.current),
@@ -233,6 +246,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function updateRentalTerm(id: string, data: Partial<RentalTerm>): Promise<void> {
+    await rentalTermService.update(id, data)
+  }
+
   function getRentalTermsByRentalId(rentalId: string): RentalTerm[] {
     return rentalTerms.filter(t => t.rentalId === rentalId)
   }
@@ -274,6 +291,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       getRentalsByTenantId,
       getRentalsByPropertyId,
       addRentalTermsBatch,
+      updateRentalTerm,
       getRentalTermsByRentalId,
       getRentalById,
       getPropertyById,

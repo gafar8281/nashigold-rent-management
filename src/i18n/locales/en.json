@@ -111,6 +111,7 @@
     "address": "Address",
     "addressPlaceholder": "e.g. 12 King Fahd Road, Riyadh",
     "errorRequired": "Property name and address are required.",
+    "errorDuplicate": "A property with the same name, type, and address already exists.",
     "types": {
       "Apartment": "Apartment",
       "Building": "Building",
@@ -155,7 +156,10 @@
     "nationalId": "National ID",
     "address": "Address",
     "employmentInfo": "Employment Information",
-    "errorRequired": "Full name, phone number, national ID, and address are required."
+    "errorRequired": "Full name, phone number, national ID, and address are required.",
+    "errorDuplicatePhone": "A tenant with this phone number already exists.",
+    "errorDuplicateNationalId": "A tenant with this national ID already exists.",
+    "errorDuplicateBoth": "A tenant with this phone number and national ID already exists."
   },
   "rentals": {
     "title": "Rentals",
@@ -193,6 +197,7 @@
     "billingCycles": {
       "Monthly": "Monthly",
       "Quarterly": "Quarterly",
+      "Half Yearly": "Half Yearly",
       "Yearly": "Yearly"
     },
     "rentalTerms": "Rental Terms",
@@ -207,7 +212,18 @@
   "overdueRentals": {
     "title": "Overdue Rentals",
     "subtitle": "{{count}} overdue term(s)",
-    "noFound": "No overdue rental terms found"
+    "noFound": "No overdue rental terms found",
+    "actions": "Actions",
+    "markAsPaid": "Mark as Paid",
+    "confirmTitle": "Mark Rental as Paid",
+    "confirmMessage": "Are you sure you want to mark this rental payment as Paid?",
+    "confirmBtn": "Confirm",
+    "successMsg": "Payment status has been updated to Paid.",
+    "sendWhatsapp": "Send WhatsApp Reminder",
+    "whatsappTitle": "Send WhatsApp Reminder",
+    "whatsappPhone": "Tenant Phone Number",
+    "whatsappMessageLabel": "Message",
+    "whatsappSend": "Send via WhatsApp"
   },
   "reports": {
     "title": "Reports",

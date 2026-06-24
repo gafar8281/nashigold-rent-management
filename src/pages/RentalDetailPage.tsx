@@ -65,7 +65,7 @@ function RentalTermsCard({ rentalId }: { rentalId: string }) {
 }
 
 const ROOM_PROPERTY_TYPES = ['Apartment', 'Building']
-const BILLING_CYCLES: BillingCycle[] = ['Monthly', 'Quarterly', 'Yearly']
+const BILLING_CYCLES: BillingCycle[] = ['Monthly', 'Quarterly', 'Half Yearly', 'Yearly']
 
 function formatDuration(totalMonths: number, t: (k: string) => string): string {
   if (totalMonths <= 0) return `0 ${t('common.months')}`

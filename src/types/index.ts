@@ -27,7 +27,7 @@ export interface Tenant {
   createdAt: string
 }
 
-export type BillingCycle = 'Monthly' | 'Quarterly' | 'Yearly'
+export type BillingCycle = 'Monthly' | 'Quarterly' | 'Half Yearly' | 'Yearly'
 
 export interface Rental {
   id: string
