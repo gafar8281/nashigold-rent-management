@@ -245,7 +245,8 @@ export default function PropertyDetailPage() {
                 <select
                   value={editType}
                   onChange={e => setEditType(e.target.value as PropertyType)}
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                  disabled
+                  className="flex h-9 w-full rounded-md border border-input bg-muted px-3 py-1 text-sm shadow-sm opacity-60 cursor-not-allowed"
                 >
                   {PROPERTY_TYPES.map(pt => (
                     <option key={pt} value={pt}>{t(`properties.types.${pt}`)}</option>
