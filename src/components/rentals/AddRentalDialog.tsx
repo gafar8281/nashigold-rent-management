@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useData } from '@/context/DataContext'
 import { calcRentalTermMonths, splitRentalTerm, generateRentalTerms } from '@/lib/calculations'
+import { todayISO } from '@/lib/formatters'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,7 +19,29 @@ interface Props {
 
 export default function AddRentalDialog({ open, onClose }: Props) {
   const { t } = useTranslation()
-  const { tenants, properties, getRoomsByPropertyId, addRental, addRentalTermsBatch } = useData()
+  const { tenants, properties, rooms, rentals, getRoomsByPropertyId, addRental, addRentalTermsBatch } = useData()
+
+  const today = todayISO()
+
+  const { occupiedPropertyIds, occupiedRoomIds } = useMemo(() => {
+    const props = new Set<string>()
+    const rms = new Set<string>()
+    for (const r of rentals) {
+      if (today > r.endDate) continue
+      if (r.roomId) rms.add(r.roomId)
+      else props.add(r.propertyId)
+    }
+    return { occupiedPropertyIds: props, occupiedRoomIds: rms }
+  }, [rentals, today])
+
+  const availableProperties = useMemo(() => {
+    return properties.filter(p => {
+      if (ROOM_PROPERTY_TYPES.includes(p.propertyType)) {
+        return rooms.filter(r => r.propertyId === p.id).some(r => !occupiedRoomIds.has(r.id))
+      }
+      return !occupiedPropertyIds.has(p.id)
+    })
+  }, [properties, rooms, occupiedPropertyIds, occupiedRoomIds])
 
   const [tenantId, setTenantId] = useState('')
   const [propertyId, setPropertyId] = useState('')
@@ -32,7 +55,7 @@ export default function AddRentalDialog({ open, onClose }: Props) {
 
   const selectedProperty = properties.find(p => p.id === propertyId)
   const needsRoom = selectedProperty ? ROOM_PROPERTY_TYPES.includes(selectedProperty.propertyType) : false
-  const availableRooms = needsRoom ? getRoomsByPropertyId(propertyId) : []
+  const availableRooms = needsRoom ? getRoomsByPropertyId(propertyId).filter(r => !occupiedRoomIds.has(r.id)) : []
 
   const durationText = useMemo(() => {
     if (!startDate || !endDate || endDate <= startDate) return null
@@ -141,7 +164,7 @@ export default function AddRentalDialog({ open, onClose }: Props) {
               className={fieldClass}
             >
               <option value="">{t('rentals.selectProperty')}</option>
-              {properties.map(p => (
+              {availableProperties.map(p => (
                 <option key={p.id} value={p.id}>{p.id} — {p.propertyName} ({p.propertyType})</option>
               ))}
             </select>
