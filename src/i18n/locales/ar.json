@@ -228,12 +228,21 @@
   "reports": {
     "title": "التقارير",
     "subtitle": "تقارير وتحليلات الإيجار للفرع",
+    "summary": "ملخص",
     "properties": "العقارات",
     "rooms": "الغرف",
     "tenants": "المستأجرون",
     "noProperties": "لا توجد عقارات",
     "noRooms": "لا توجد غرف",
-    "noTenants": "لا يوجد مستأجرون"
+    "noTenants": "لا يوجد مستأجرون",
+    "totalProperties": "إجمالي العقارات",
+    "totalPropertiesSub": "جميع العقارات",
+    "activeProperties": "العقارات النشطة",
+    "activePropertiesSub": "مؤجَّرة حالياً",
+    "totalRooms": "إجمالي الغرف",
+    "totalRoomsSub": "جميع الغرف",
+    "activeRooms": "الغرف النشطة",
+    "activeRoomsSub": "مشغولة حالياً"
   },
   "settings": {
     "title": "إعدادات الحساب",

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Building2, BedDouble, CheckCircle2, LayoutGrid } from 'lucide-react'
 import { useData } from '@/context/DataContext'
-import { formatDate } from '@/lib/formatters'
+import { formatDate, todayISO } from '@/lib/formatters'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import TablePagination from '@/components/shared/TablePagination'
@@ -16,17 +17,35 @@ const TYPE_COLORS: Record<string, string> = {
   Office:    'bg-orange-100 text-orange-700',
 }
 
-type Tab = 'properties' | 'rooms' | 'tenants'
+type Tab = 'summary' | 'properties' | 'rooms' | 'tenants'
 
 export default function ReportsPage() {
   const { t } = useTranslation()
-  const { properties, rooms, tenants } = useData()
-  const [activeTab, setActiveTab] = useState<Tab>('properties')
+  const { properties, rooms, tenants, rentals } = useData()
+  const [activeTab, setActiveTab] = useState<Tab>('summary')
   const [propPage, setPropPage] = useState(1)
   const [roomPage, setRoomPage] = useState(1)
   const [tenantPage, setTenantPage] = useState(1)
 
-  const tabs: { id: Tab; label: string; count: number }[] = [
+  const today = todayISO()
+  const { occupiedPropertyIds, occupiedRoomIds } = useMemo(() => {
+    const props = new Set<string>()
+    const rms = new Set<string>()
+    for (const r of rentals) {
+      if (today > r.endDate) continue
+      if (r.roomId) rms.add(r.roomId)
+      else props.add(r.propertyId)
+    }
+    return { occupiedPropertyIds: props, occupiedRoomIds: rms }
+  }, [rentals, today])
+
+  const activePropertyCount = properties.filter(p => {
+    if (occupiedPropertyIds.has(p.id)) return true
+    return rooms.some(r => r.propertyId === p.id && occupiedRoomIds.has(r.id))
+  }).length
+
+  const tabs: { id: Tab; label: string; count?: number }[] = [
+    { id: 'summary',    label: t('reports.summary') },
     { id: 'properties', label: t('reports.properties'), count: properties.length },
     { id: 'rooms',      label: t('reports.rooms'),      count: rooms.length },
     { id: 'tenants',    label: t('reports.tenants'),     count: tenants.length },
@@ -69,11 +88,67 @@ export default function ReportsPage() {
               }`}
             >
               {tab.label}
-              <span className="ms-2 rounded-full bg-muted px-2 py-0.5 text-xs">{tab.count}</span>
+              {tab.count !== undefined && (
+                <span className="ms-2 rounded-full bg-muted px-2 py-0.5 text-xs">{tab.count}</span>
+              )}
             </button>
           ))}
         </div>
       </div>
+
+      {/* Summary tab */}
+      {activeTab === 'summary' && (
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.totalProperties')}</CardTitle>
+              <div className="rounded-md p-1.5 bg-amber-50 dark:bg-amber-950">
+                <Building2 className="h-4 w-4 text-amber-600" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{properties.length}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t('reports.totalPropertiesSub')}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.activeProperties')}</CardTitle>
+              <div className="rounded-md p-1.5 bg-green-50 dark:bg-green-950">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{activePropertyCount}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t('reports.activePropertiesSub')}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.totalRooms')}</CardTitle>
+              <div className="rounded-md p-1.5 bg-blue-50 dark:bg-blue-950">
+                <BedDouble className="h-4 w-4 text-blue-600" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{rooms.length}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t('reports.totalRoomsSub')}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('reports.activeRooms')}</CardTitle>
+              <div className="rounded-md p-1.5 bg-purple-50 dark:bg-purple-950">
+                <LayoutGrid className="h-4 w-4 text-purple-600" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{occupiedRoomIds.size}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t('reports.activeRoomsSub')}</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Properties tab */}
       {activeTab === 'properties' && (

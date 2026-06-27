@@ -228,12 +228,21 @@
   "reports": {
     "title": "Reports",
     "subtitle": "Branch rental reports and analytics",
+    "summary": "Summary",
     "properties": "Properties",
     "rooms": "Rooms",
     "tenants": "Tenants",
     "noProperties": "No properties found",
     "noRooms": "No rooms found",
-    "noTenants": "No tenants found"
+    "noTenants": "No tenants found",
+    "totalProperties": "Total Properties",
+    "totalPropertiesSub": "All properties",
+    "activeProperties": "Active Properties",
+    "activePropertiesSub": "Currently rented",
+    "totalRooms": "Total Rooms",
+    "totalRoomsSub": "All rooms",
+    "activeRooms": "Active Rooms",
+    "activeRoomsSub": "Currently occupied"
   },
   "settings": {
     "title": "Account Settings",

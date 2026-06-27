@@ -68,9 +68,18 @@ export default function OverdueRentalsPage() {
     setTimeout(() => setShowSuccess(false), 4000)
   }
 
+  // function buildMessage(target: typeof overdueTerms[number]): string {
+  //   const { tenant, property, term } = target
+  //   return `Dear ${tenant?.fullName ?? 'Tenant'}, this is a reminder that your rental payment for ${property?.propertyName ?? 'the property'} is overdue. The rent amount is ${formatCurrency(term.amount)} (Term: ${term.termLabel}), which was due on ${formatDate(term.dueDate)}. Please make the payment at your earliest convenience. Thank you.`
+  // }
   function buildMessage(target: typeof overdueTerms[number]): string {
-    const { tenant, property, term } = target
-    return `Dear ${tenant?.fullName ?? 'Tenant'}, this is a reminder that your rental payment for ${property?.propertyName ?? 'the property'} is overdue. The rent amount is ${formatCurrency(term.amount)} (Term: ${term.termLabel}), which was due on ${formatDate(term.dueDate)}. Please make the payment at your earliest convenience. Thank you.`
+    const { tenant, property, term } = target;
+    
+    const tenantName = tenant?.fullName ?? 'عزيزي المستأجر';
+    const propertyName = property?.propertyName ?? 'العقار';
+    const greeting = tenant?.fullName ? `عزيزي ${tenantName}` : tenantName;
+  
+    return `${greeting}، نود تذكيركم بأن دفعة الإيجار الخاصة بـ ${propertyName} متأخرة. قيمة الإيجار هي ${formatCurrency(term.amount)} (${term.termLabel})، والتي كان تاريخ استحقاقها في ${formatDate(term.dueDate)}. يرجى سداد المبلغ في أقرب وقت ممكن. شكراً لكم.`;
   }
 
   function handleOpenWhatsapp() {
